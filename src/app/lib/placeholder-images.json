@@ -1,0 +1,29 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Sustainable landscape with green hills and modern clean energy",
+      "imageUrl": "https://picsum.photos/seed/eco1/1200/800",
+      "imageHint": "sustainable landscape"
+    },
+    {
+      "id": "land-1",
+      "description": "Tropical rainforest parcel for carbon credits",
+      "imageUrl": "https://picsum.photos/seed/land1/600/400",
+      "imageHint": "rainforest land"
+    },
+    {
+      "id": "land-2",
+      "description": "Vibrant grassland ecosystem",
+      "imageUrl": "https://picsum.photos/seed/land2/600/400",
+      "imageHint": "grassland nature"
+    },
+    {
+      "id": "land-3",
+      "description": "Managed sustainable pine forest",
+      "imageUrl": "https://picsum.photos/seed/land3/600/400",
+      "imageHint": "pine forest"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for institutional nodes
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // --- Public Registry Transparency ---
+    
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isSignedIn() && request.auth.uid == userId;
+      // Allow unauthenticated identity lookup during login
+      allow list: if true;
+    }
+
+    match /lands/{landId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /auditLogs/{logId} {
+      // Allow unauthenticated nodes to anchor events to the ledger (e.g. registration attempts)
+      allow read, create: if true;
+      allow update, delete: if isSignedIn();
+    }
+
+    match /merkleTreeRoots/{rootId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    match /carbon_projects/{projectId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+    }
+
+    // --- Core Ledger Access ---
+    
+    match /transactions/{transactionId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /investments/{investmentId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /carbon_credits/{creditId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /carbon_estimates/{estimateId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /land_verifications/{verificationId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn() && (resource == null || resource.data.userId == request.auth.uid);
+      allow write: if isSignedIn();
+    }
+
+    // Catch-all for protocol integrity
+    match /{document=**} {
+      allow read, write: if isSignedIn();
+    }
+  }
+}

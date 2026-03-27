@@ -1,0 +1,188 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Core identity profile for network nodes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique node identifier." },
+        "name": { "type": "string", "description": "Display name of the entity." },
+        "email": { "type": "string", "description": "Institutional email address." },
+        "role": { "type": "string", "enum": ["admin", "landowner", "investor", "industry"], "description": "Authorized role within the network." },
+        "phone": { "type": "string", "description": "Optional contact number." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of initial enrollment." },
+        "verified": { "type": "boolean", "description": "Status of node verification." },
+        "publicKey": { "type": "string", "description": "RSA-4096 Public Key for signature verification." },
+        "password_hash": { "type": "string", "description": "Salted SHA-256 password fingerprint." },
+        "salt": { "type": "string", "description": "Unique cryptographic salt for the node." }
+      }
+    },
+    "Land": {
+      "title": "Land",
+      "description": "Physical land parcel digitized into a network asset.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Asset ID." },
+        "name": { "type": "string", "description": "Common name of the parcel." },
+        "ownerId": { "type": "string", "description": "Reference to the Landowner User ID." },
+        "location": { "type": "string", "description": "Geographic location string." },
+        "area": { "type": "number", "description": "Total area size." },
+        "areaUnit": { "type": "string", "description": "Unit of measurement (acres/hectares)." },
+        "soilType": { "type": "string", "description": "Geological soil classification." },
+        "vegetation": { "type": "string", "description": "Dominant vegetation profile." },
+        "latitude": { "type": "number", "description": "GPS Latitude." },
+        "longitude": { "type": "number", "description": "GPS Longitude." },
+        "images": { "type": "array", "items": { "type": "string" }, "description": "Reference links to property imagery." },
+        "integrityHash": { "type": "string", "description": "SHA-256 fingerprint of the land metadata." },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"], "description": "Current lifecycle state." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "verifiedBy": { "type": "string" },
+        "authoritySignature": { "type": "string", "description": "RSA signature of the integrity hash." },
+        "authorityPublicKey": { "type": "string", "description": "Public key of the signing administrator." }
+      }
+    },
+    "LandVerification": {
+      "title": "LandVerification",
+      "description": "Record of administrative audit for a land asset.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "landId": { "type": "string" },
+        "adminId": { "type": "string" },
+        "status": { "type": "string" },
+        "remarks": { "type": "string" },
+        "verifiedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "CarbonProject": {
+      "title": "CarbonProject",
+      "description": "Active ecological project generating carbon credits.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "landId": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "projectType": { "type": "string" },
+        "carbonPotential": { "type": "number" },
+        "carbonUnit": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "CarbonEstimate": {
+      "title": "CarbonEstimate",
+      "description": "AI-driven calculation of sequestration potential.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "landParcelId": { "type": "string" },
+        "landownerId": { "type": "string" },
+        "estimatedCarbonTonnes": { "type": "number" },
+        "status": { "type": "string" },
+        "estimationDate": { "type": "string", "format": "date-time" },
+        "verifiedTonnes": { "type": "number" },
+        "verifiedAt": { "type": "string", "format": "date-time" },
+        "verifiedBy": { "type": "string" }
+      }
+    },
+    "Investment": {
+      "title": "Investment",
+      "description": "Fractional investment unit for land assets.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "landId": { "type": "string" },
+        "landownerId": { "type": "string" },
+        "symbol": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string" },
+        "unitValue": { "type": "string" },
+        "issuanceHash": { "type": "string" }
+      }
+    },
+    "CarbonCredit": {
+      "title": "CarbonCredit",
+      "description": "Tokenized metric tonne of CO2 sequestration.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "landId": { "type": "string" },
+        "landownerId": { "type": "string" },
+        "symbol": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string" }
+      }
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Immutable settlement record between nodes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "buyerId": { "type": "string" },
+        "sellerId": { "type": "string" },
+        "tokenId": { "type": "string" },
+        "tokenType": { "type": "string" },
+        "amount": { "type": "number" },
+        "totalPrice": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "transactionHash": { "type": "string" }
+      }
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "System alert for node owners.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Cryptographically hashed system event.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "userId": { "type": "string" },
+        "eventType": { "type": "string" },
+        "entityId": { "type": "string" },
+        "eventHash": { "type": "string" }
+      }
+    },
+    "MerkleRoot": {
+      "title": "MerkleRoot",
+      "description": "Global state anchor representing a batch of events.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "rootHash": { "type": "string" },
+        "logCount": { "type": "number" },
+        "creationDate": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": { "$ref": "#/backend/entities/User" }, "description": "Node profiles." },
+    "/lands/{landId}": { "schema": { "$ref": "#/backend/entities/Land" }, "description": "Asset registry." },
+    "/land_verifications/{verificationId}": { "schema": { "$ref": "#/backend/entities/LandVerification" }, "description": "Audit records." },
+    "/carbon_projects/{projectId}": { "schema": { "$ref": "#/backend/entities/CarbonProject" }, "description": "Active projects." },
+    "/carbon_estimates/{estimateId}": { "schema": { "$ref": "#/backend/entities/CarbonEstimate" }, "description": "AI estimations." },
+    "/investments/{investmentId}": { "schema": { "$ref": "#/backend/entities/Investment" }, "description": "Investment units." },
+    "/carbon_credits/{creditId}": { "schema": { "$ref": "#/backend/entities/CarbonCredit" }, "description": "Carbon tokens." },
+    "/transactions/{transactionId}": { "schema": { "$ref": "#/backend/entities/Transaction" }, "description": "Ledger settlements." },
+    "/notifications/{notificationId}": { "schema": { "$ref": "#/backend/entities/Notification" }, "description": "Alerts." },
+    "/auditLogs/{logId}": { "schema": { "$ref": "#/backend/entities/AuditLog" }, "description": "Integrity logs." },
+    "/merkleTreeRoots/{rootId}": { "schema": { "$ref": "#/backend/entities/MerkleRoot" }, "description": "State anchors." }
+  }
+}
